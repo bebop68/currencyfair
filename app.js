@@ -29,6 +29,8 @@ var api = new ParseServer({
 	  classNames: ['Trade','Stats','Country','Currency']
 	}
 });
+var dashboarduser = process.env.CFDASHBOARDUSER || 'currencyfair';
+var dashboardpass = process.env.CFDASHBOARDPASS || 'currencyfair';
 var dashboard = new ParseDashboard({
 	"apps": [
 		{
@@ -38,7 +40,13 @@ var dashboard = new ParseDashboard({
 			"appName": 'Currency Fair'
 		}
 	],
-	"trustProxy": 1
+	"trustProxy": 1,
+	"users": [
+		{
+			"user":dashboarduser,
+			"pass":dashboardpass
+		}
+	]
 });
 
 var app = express();
