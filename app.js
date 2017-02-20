@@ -80,11 +80,12 @@ app.use(function (err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error');
 });
-
+var apiport = process.env.CFAPIPORT || 1338;
+var dashboardport = process.env.CFDASHBOARDPORT || 4041;
 var parseHttpServer = require('http').createServer(parseApp);
-parseHttpServer.listen(1338);
+parseHttpServer.listen(apiport);
 var dashboardHttpServer = require('http').createServer(dashboardApp);
-dashboardHttpServer.listen(4041);
+dashboardHttpServer.listen(dashboardport);
 /*
 	Web Socket live query server
  */
