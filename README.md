@@ -62,7 +62,10 @@ The html view containing the app is on views/index.ejs
 	<li>npm start</li>
 	<li>gulp run-test</li>
 </ul>
-
+<h4>About Backdoor url</h4>
+<p>The codetest requires a direct endpoint so, the backdoor has been created for this purpose but,
+the correct and secure way to post trade should be the api login and token authentication</p>  
+ 
 
 
 
