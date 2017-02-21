@@ -42,6 +42,7 @@ The html view containing the app is on views/index.ejs
 <h4>Message consumption endpoints (code challenge prototype)</h4>
 <ul>
 <li>PARSECFURL/login?username=traderobot&password=traderobot <p>
+	,login must contains an header with X-Parse-Application-Id:PARSECFAPP 
 	the login endpoint will return a json containing the sessionToken.
 </p></li>
 <li>POST PARSECFURL/classes/Trade
@@ -64,7 +65,8 @@ The html view containing the app is on views/index.ejs
 </ul>
 <h4>About Backdoor url</h4>
 <p>The codetest requires a direct endpoint so, the backdoor has been created for this purpose but,
-the correct and secure way to post trade should be the api login and token authentication</p>  
+the correct and secure way to post trade should be the api login and token authentication</p>
+<p>production  PARSECFURL and PARSECFAPP are visible on the frontend source html.</p>  
  
 
 
