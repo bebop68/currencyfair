@@ -6,6 +6,13 @@ var setupIndexes = function(db){
 			console.log(err);
 		}
 	});
+	stats.ensureIndex({currenciesKey:1}, {unique:false}, function(err, indexName) {
+		if(err){
+			console.log("!!!!!! STATS INDEX SETUP FAILED ");
+			console.log(err);
+		}
+	});
+
 	var country = db.collection('Country');
 	country.ensureIndex({country:1}, {unique:true}, function(err, indexName) {
 		if(err){
@@ -28,6 +35,14 @@ var setupIndexes = function(db){
 			console.log(err);
 		}
 	});
+	var currencykey = db.collection('CurrencyKey');
+	currencykey.ensureIndex({key:1}, {unique:false}, function(err, indexName) {
+		if(err){
+			console.log("!!!!!! CurrencyKey INDEX SETUP FAILED ");
+			console.log(err);
+		}
+	});
+
 
 };
 module.exports = setupIndexes;

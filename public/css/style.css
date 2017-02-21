@@ -9,35 +9,29 @@ md-card h2:first-of-type {
 	margin-top: 0;
 }
 
-md-toolbar .md-button.md-default-theme {
-	border-radius: 99%;
-}
 
 h2 {
 	font-weight: 400;
 }
-
-.md-toolbar-tools-bottom {
-	font-size: small;
+.md-table-col {
+	text-align: left;
+	padding: 0.2rem;
+	vertical-align: top;
+	border-top: 0;
+	-webkit-transition: all 0.3s ease;
+	-o-transition: all 0.3s ease;
+	transition: all 0.3s ease;
+	font-size: 0.75em;
 }
-.md-toolbar-tools-bottom:last-child {
-	opacity: 0.8;
+.md-table {
+	min-width: 100%;
+	border-collapse: collapse;
 }
-
-md-toolbar:not(.md-hue-1),
-.md-fab {
-	fill: #fff;
+.md-table-header {
+	border-bottom: 1px solid rgb(230,230,230);
+	color: rgb(130,130,130);
+	text-align: left;
+	font-size: 0.75em;
+	font-weight: 700;
+	padding: 16px 16px 16px 0;
 }
-
-md-sidenav {
-	fill: #737373;
-}
-md-sidenav ng-md-icon {
-	position: relative;
-	top: 5px;
-}
-
-.user-avatar {
-	border-radius: 99%;
-}
-

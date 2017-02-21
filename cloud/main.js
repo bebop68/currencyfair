@@ -2,6 +2,7 @@ var Country = require('./models/country');
 var Currency = require('./models/currency');
 var Stats = require('./models/stats');
 var Trade = require('./models/trade');
+var CurrencyKey = require('./models/currencykey');
 
 Parse.Cloud.beforeSave(Trade, function(request,response) {
 	var trade = request.object;
@@ -9,20 +10,22 @@ Parse.Cloud.beforeSave(Trade, function(request,response) {
 	if(!valid){
 		response.error(trade.validationErrors);
 	}
+	trade.set('timePlaced',new Date(trade.get('timePlaced')));
 	response.success();
 	//Checking for currencies and countries
 	var currencyFrom = trade.get("currencyFrom");
-	var currencyQuery = new Parse.Query(Currency);
-	currencyQuery.equalTo("currency", currencyFrom);
-	currencyQuery.find().then(function(res){
+	var currencyFromQuery = new Parse.Query(Currency);
+	currencyFromQuery.equalTo("currency", currencyFrom);
+	currencyFromQuery.find().then(function(res){
 		if(res.length == 0){
 			var currency = new Currency();
 			currency.save({currency:currencyFrom}, { useMasterKey: true })
 		}
 	});
 	var currencyTo = trade.get("currencyTo");
-	currencyQuery.equalTo("currency", currencyTo);
-	currencyQuery.find().then(function(res){
+	var currencyToQuery = new Parse.Query(Currency);
+	currencyToQuery.equalTo("currency", currencyTo);
+	currencyToQuery.find().then(function(res){
 		if(res.length == 0){
 			var currency = new Currency();
 			currency.save({currency:currencyTo}, { useMasterKey: true })
@@ -52,6 +55,7 @@ Parse.Cloud.beforeSave(Trade, function(request,response) {
 				"sellTotal":trade.get("amountSell"),
 				"buyTotal":trade.get("amountBuy"),
 				"rate":trade.get("rate"),
+				"currenciesKey":currencyFrom+'-'+currencyTo,
 				"usersTotal":1
 			}, { useMasterKey: true });
 		} else {
@@ -64,6 +68,15 @@ Parse.Cloud.beforeSave(Trade, function(request,response) {
 				"buyTotal":buyTotal,
 				"usersTotal":stats.get("usersTotal") + 1,
 				"rate":rate
+			}, { useMasterKey: true });
+		}
+	});
+	new Parse.Query(CurrencyKey).equalTo("key", currencyFrom+'-'+currencyTo)
+	.find().then(function(res){
+		var key = new CurrencyKey();
+		if(res.length == 0){
+			key.save({
+				"key":currencyFrom+'-'+currencyTo
 			}, { useMasterKey: true });
 		}
 	});

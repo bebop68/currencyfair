@@ -26,7 +26,7 @@ var api = new ParseServer({
 	enableAnonymousUsers: false,
 	allowClientClassCreation: false, //No spam objects
 	liveQuery: {
-	  classNames: ['Trade','Stats','Country','Currency']
+	  classNames: ['Trade','Stats','Country','Currency','CurrencyKey']
 	}
 });
 var dashboarduser = process.env.CFDASHBOARDUSER || 'currencyfair';
@@ -67,6 +67,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'node_modules')));
 
 app.use('/', index);
 app.use('/backdoor/', backdoor);

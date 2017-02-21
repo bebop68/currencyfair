@@ -47,6 +47,10 @@ var Trade = Parse.Object.extend("Trade",{
 			this.validationErrors.timePlaced = "required";
 			valid = false;
 		}
+		if(timePlaced && (new Date(timePlaced) === "Invalid Date" || isNaN(new Date(timePlaced)))){
+			this.validationErrors.timePlaced = "invalid date/time";
+			valid = false;
+		}
 		if(!originatingCountry){
 			this.validationErrors.originatingCountry = "required";
 			valid = false;

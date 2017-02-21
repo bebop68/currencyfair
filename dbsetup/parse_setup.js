@@ -40,6 +40,12 @@ var parseSetup = function(){
 					console.log(err);
 				}
 			});
+			schemaSetup.setupCurrencyKeys(db,function(err,result){
+				if(err){
+					console.log("!!!!!! PARSE SCHEMA CURRENCYKEYS SETUP FAILED ");
+					console.log(err);
+				}
+			});
 			indexesSetup(db);
 
 			//Traderobot role and user

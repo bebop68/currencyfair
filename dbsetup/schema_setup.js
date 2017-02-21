@@ -11,12 +11,14 @@ var setupTrade = function(db,callback){
 		'amountSell':'number',
 		'amountBuy':'number',
 		'rate':'number',
-		'timePlaced':'string',
+		'timePlaced':'date',
 		'originatingCountry':'string',
 		'_metadata' : {
 			'class_permissions':{
 				'get':{},
-				'find':{},
+				'find':{
+					"*" : true
+				},
 				'create':{
 					'role:traderobot' : true
 				},
@@ -45,6 +47,7 @@ var setupStats = function(db,callback){
 		'buyTotal':'number',
 		'rate':'number',
 		'usersTotal':'number',
+		'currenciesKey':'string',
 		'_metadata' : {
 			'class_permissions':{
 				"get" : {
@@ -131,12 +134,37 @@ var setupRole = function(db,callback){
 	});
 
 };
-
+var setupCurrencyKeys = function(db,callback){
+	var schema = db.collection(schemaCollection);
+	schema.update({'_id':'CurrencyKey'},{
+		'objectId':'string',
+		'updatedAt':'date',
+		'createdAt':'date',
+		'key':'string',
+		'_metadata' : {
+			'class_permissions':{
+				"get" : {
+					"*" : true
+				},
+				"find" : {
+					"*" : true
+				},
+				"create" : {},
+				"update" : {},
+				"delete" : {},
+				"addField" : {}
+			}
+		}
+	},{upsert:true, w: 1},function(err, result){
+		callback(err, result);
+	});
+};
 
 module.exports = {
 	setupTrade:setupTrade,
 	setupStats:setupStats,
 	setupCurrency:setupCurrency,
 	setupCountry:setupCountry,
-	setupRole:setupRole
+	setupRole:setupRole,
+	setupCurrencyKeys:setupCurrencyKeys
 };

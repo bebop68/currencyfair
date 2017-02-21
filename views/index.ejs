@@ -3,8 +3,16 @@
 <head>
 	<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.css" />
 	<link rel="stylesheet" href="/css/style.css" />
+	<script src="/parse/dist/parse.min.js"></script>
+	<script type="application/javascript">
+		//Parse Initialization
+		Parse.initialize('<%= process.env.PARSECFAPP || 'token123456' %>');
+		Parse.serverURL = '<%= process.env.PARSECFURL || 'http://localhost:1338/parse' %>';
+	</script>
+
 </head>
 <body layout="row" ng-controller="AppCtrl">
+
 <div layout="column" class="relative" layout-fill role="main">
 	<md-toolbar ng-show="!showSearch">
 		<div class="md-toolbar-tools">
@@ -18,7 +26,7 @@
 				Trades
 			</md-tab>
 			<md-tab id="tab2" aria-controls="tab2-content">
-				Stats
+				Country Rates Stats
 			</md-tab>
 		</md-tabs>
 	</md-toolbar>
@@ -33,36 +41,72 @@
 					 md-swipe-left="next()"
 					 md-swipe-right="previous()"
 					 layout="row" layout-align="center center">
+
 					<md-card flex-gt-sm="90" flex-gt-md="80">
 						<md-card-content>
-							<h2>Activity</h2>
-							<md-list>
-								<!--
-								<md-item ng-repeat="item in activity | filter:search">
-									<md-item-content>
-										<div class="md-tile-left inset" hide-sm>
-											<user-avatar></user-avatar>
-										</div>
-										<div class="md-tile-content">
-											<h3>{{item.what}}</h3>
-											<h4>{{item.who}}</h4>
-											<p>
-												{{item.notes}}
-											</p>
-										</div>
-									</md-item-content>
-									<md-divider md-inset hide-sm ng-if="!$last"></md-divider>
-									<md-divider hide-gt-sm ng-if="!$last"></md-divider>
-								</md-item>
+							<h2>Search</h2>
+							<div layout="row" layout-align="space-between center">
+								<span>Currency From</span>
+								<md-select ng-model="tradesearch.currencyFrom">
+									<md-option ng-repeat="currency in currencies" ng-value="currency">
+										{{ currency }}
+									</md-option>
+								</md-select>
+							</div>
+							<md-divider></md-divider>
+							<div layout="row" layout-align="space-between center">
+								<span>Currency To</span>
+								<md-select ng-model="tradesearch.currencyTo">
+									<md-option ng-repeat="currency in currencies" ng-value="currency">
+										{{ currency }}
+									</md-option>
+								</md-select>
+							</div>
+							<md-divider></md-divider>
+							<div layout="row" layout-align="space-between center">
+								<span>Originating Country</span>
+								<md-select ng-model="tradesearch.originatingCountry">
+									<md-option ng-repeat="country in countries" ng-value="country">
+										{{ country }}
+									</md-option>
+								</md-select>
+							</div>
+							<md-divider></md-divider>
+							<div layout="row" layout-align="space-between center">
+								<span></span>
+								<md-button class="md-primary" ng-click="doTradeSearch()">Search</md-button>
+							</div>
+						</md-card-content>
+						<md-card-content>
 
-								<md-divider></md-divider>
-								<md-item layout class="inset">
-									<md-button layout layout-align="start center" flex class="md-primary">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg> More
-									</md-button>
-								</md-item>
-								-->
-							</md-list>
+							<h2>Activity</h2>
+							<table class="md-table">
+								<thead>
+									<tr>
+										<th class="md-table-header">User Id</th>
+										<th class="md-table-header">Currency From</th>
+										<th class="md-table-header">Currency To</th>
+										<th class="md-table-header">Amount Sell</th>
+										<th class="md-table-header">Amount Buy</th>
+										<th class="md-table-header">Rate</th>
+										<th class="md-table-header">Time Placed</th>
+										<th class="md-table-header">Originating Country</th>
+
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in trades">
+										<td class="md-table-col" ng-bind="item.userId"></td>
+										<td class="md-table-col" ng-bind="item.currencyFrom"></td>
+										<td class="md-table-col" ng-bind="item.currencyTo"></td>
+										<td class="md-table-col" ng-bind="item.amountSell"></td>
+										<td class="md-table-col" ng-bind="item.amountBuy"></td>
+										<td class="md-table-col" ng-bind="item.rate"></td>
+										<td class="md-table-col" ng-bind="item.timePlaced"></td>
+										<td class="md-table-col" ng-bind="item.originatingCountry"></td>
+									</tr>
+								</tbody>
+							</table>
 						</md-card-content>
 					</md-card>
 				</div>
@@ -75,33 +119,23 @@
 					 layout="row" layout-align="center center">
 					<md-card flex-gt-sm="90" flex-gt-md="80">
 						<md-card-content>
-							<!--
-							<h2>Favorites</h2>
-							<md-list>
-								<md-item ng-repeat="item in activity | filter:search | orderBy:'-what'">
-									<md-item-content>
-										<div class="md-tile-left inset" hide-sm>
-											<user-avatar></user-avatar>
-										</div>
-										<div class="md-tile-content">
-											<h3>{{item.what}}</h3>
-											<h4>{{item.who}}</h4>
-											<p>
-												{{item.notes}}
-											</p>
-										</div>
-									</md-item-content>
-									<md-divider md-inset hide-sm ng-if="!$last"></md-divider>
-									<md-divider hide-gt-sm ng-if="!$last"></md-divider>
-								</md-item>
-								<md-divider></md-divider>
-								<md-item layout class="inset">
-									<md-button layout layout-align="start center" flex class="md-primary">
-										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg> More
-									</md-button>
-								</md-item>
-							</md-list>
-							-->
+							<div layout="row" layout-align="space-between center">
+								<span>Select Currencies</span>
+								<md-select ng-model="ratekey" ng-change="ratekeyChanged(this)">
+									<md-option ng-repeat="key in ratecurrencies" ng-value="key">
+										{{ key }}
+									</md-option>
+								</md-select>
+							</div>
+						</md-card-content>
+						<md-card-content>
+							<canvas id="bar"
+									class="chart chart-bar"
+									chart-data="chartdata"
+									chart-labels="chartlabels"
+									chart-series="chartseries"
+							>
+							</canvas>
 						</md-card-content>
 					</md-card>
 				</div>
@@ -111,7 +145,7 @@
 		</ui-view>
 	</md-content>
 </div>
-<!-- Angular Material Dependencies -->
+<script src="/chart.js/dist/Chart.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.6/angular-animate.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-aria.min.js"></script>
@@ -119,6 +153,10 @@
 <script src="//ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.js"></script>
 
 <script src="//cdn.jsdelivr.net/angular-material-icons/0.4.0/angular-material-icons.min.js"></script>
+
+<script src="/angular-chart.js/dist/angular-chart.min.js"></script>
 <script src="/app/app.js"></script>
+<script src="/app/services/parse.js"></script>
+
 </body>
 </html>
